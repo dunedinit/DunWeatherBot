@@ -1,8 +1,10 @@
 'use strict'
 
 exports.handle = (client) => {
-  // Create steps
-  const sayHello = client.createStep({
+  // Create steps //
+  
+  //
+	const sayHello = client.createStep({
     satisfied() {
       return Boolean(client.getConversationState().helloSent)
     },
@@ -22,7 +24,7 @@ exports.handle = (client) => {
     }
   })
 
-  const untrained = client.createStep({
+	const untrained = client.createStep({
     satisfied() {
       return false
     },
@@ -33,17 +35,48 @@ exports.handle = (client) => {
     }
   })
 
-  client.runFlow({
-    classifications: {
-      // map inbound message classifications to names of streams
-    },
-    autoResponses: {
-      // configure responses to be automatically sent as predicted by the machine learning model
-    },
-    streams: {
-      main: 'onboarding',
-      onboarding: [sayHello],
-      end: [untrained],
-    },
-  })
+	const provideWeather = client.createStep({
+  satisfied() {
+    return false
+  },
+
+  prompt() {
+    // Need to provide weather
+    client.done()
+  },
+})
+
+	const collectCity = client.createStep({
+  			satisfied() {
+    	return Boolean(client.getConversationState().weatherCity)
+  	},
+
+	extractInfo() {
+    	const city = client.getFirstEntityWithRole(client.getMessagePart(), 'city')
+
+		if (city) {
+		  client.updateConversationState({
+			weatherCity: city,
+		  })
+
+      	console.log('User wants the weather in:', city.value)
+    	}
+	},
+
+	prompt() {
+		client.addResponse('prompt/weather_city')
+		client.done()
+	  },
+	})
+
+
+	client.runFlow({
+	  classifications: {},
+	  streams: {
+		main: 'getWeather',
+		hi: [sayHello],
+		getWeather: [collectCity, provideWeather],
+	  }
+	})
+
 }
