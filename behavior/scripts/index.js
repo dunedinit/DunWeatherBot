@@ -35,17 +35,6 @@ exports.handle = (client) => {
     }
   })
 
-	const provideWeather = client.createStep({
-  satisfied() {
-    return false
-  },
-
-  prompt() {
-    // Need to provide weather
-    client.done()
-  },
-})
-
 	const collectCity = client.createStep({
   			satisfied() {
     	return Boolean(client.getConversationState().weatherCity)
