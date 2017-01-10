@@ -69,6 +69,23 @@ exports.handle = (client) => {
 	  },
 	})
 
+	const provideWeather = client.createStep({
+	  satisfied() {
+		return false
+	  },
+
+	  prompt() {
+		let weatherData = {
+		  temperature: 60,
+		  condition: 'sunny',
+		  city: client.getConversationState().weatherCity.value,
+		}
+
+		client.addResponse('provide_weather/current', weatherData)
+		client.done()
+	  }
+	})
+
 
 	client.runFlow({
 	  classifications: {},
