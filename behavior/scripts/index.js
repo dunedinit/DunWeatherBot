@@ -95,3 +95,4 @@ exports.handle = function handle(client) {
       getWeather: [collectCity, provideWeather],
     }
   })
+}
