@@ -94,5 +94,9 @@ exports.handle = function handle(client) {
       hi: [sayHello],
       getWeather: [collectCity, provideWeather],
     }
+<<<<<<< HEAD
   })
 }
+=======
+  })
+>>>>>>> c452280baf1646bfaa9306f2bd6ec3a02a3dac7c
