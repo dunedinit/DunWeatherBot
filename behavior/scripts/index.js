@@ -65,7 +65,7 @@ exports.handle = function handle(client) {
         client.updateName({
           weatherCity: name,
         })
-        console.log('User wants the weather in:', city.value)
+        console.log('User wants my name:', city.value)
       }
     },
 
