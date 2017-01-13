@@ -3,7 +3,6 @@
 const getCurrentWeather = require('./lib/getCurrentWeather')
 
 exports.handle = function handle(client) {
-
   const sayHello = client.createStep({
     satisfied() {
       return Boolean(client.getConversationState().helloSent)
@@ -54,27 +53,6 @@ exports.handle = function handle(client) {
     },
   })
 
-  const collectName = client.createStep({
-    satisfied() {
-      return Boolean(client.getName().Name)
-    },
-
-    extractInfo() {
-     const city = client.getFirstEntityWithRole(client.getMessagePart(), 'name')
-      if (name) {
-        client.updateName({
-          weatherCity: name,
-        })
-        console.log('User wants my name:', city.value)
-      }
-    },
-
-    prompt() {
-      client.addResponse('get_answer/name')
-      client.done()
-    },
-  })
-
   const provideWeather = client.createStep({
     satisfied() {
       return false
@@ -112,10 +90,9 @@ exports.handle = function handle(client) {
   client.runFlow({
     classifications: {},
     streams: {
-      main: 'collectName',
+      main: 'getWeather',
       hi: [sayHello],
-      
-      //getWeather: [collectCity, provideWeather],
+      getWeather: [collectCity, provideWeather],
     }
   })
 }
